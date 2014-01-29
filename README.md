@@ -1,0 +1,1 @@
+Template for a new Visual Studio solution based on UppercuT
