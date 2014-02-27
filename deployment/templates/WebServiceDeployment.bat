@@ -10,21 +10,21 @@ IF /I %environment:~-3% == LAN (
 )
 
 SET DIR=%~d0%~p0%
-For /f "tokens=1-3 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
-For /f "tokens=1-2 delims=/: " %%a in ("%TIME%") do (set mytime=%%a%%b)
+for /F "usebackq tokens=1,2 delims==" %%i in (`wmic os get LocalDateTime /VALUE 2^>NUL`) do if '.%%i.'=='.LocalDateTime.' set ldt=%%j
+set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${share.webserver.webservicedeployment}
 SET dir.foldertodeploy=_PublishedWebSites\${webservicename}
 
 REM Backup first
-SET deploytargetbackupfolder=%dir.deploytarget%_backup_%mydate%_%mytime%
+SET deploytargetbackupfolder=%dir.deploytarget%_backup_%TIMESTAMP%
 IF EXIST "%deploytargetbackupfolder%" RMDIR /S /Q "%deploytargetbackupfolder%"
 MKDIR "%deploytargetbackupfolder%"
 IF EXIST "%dir.deploytarget%" XCOPY /E "%dir.deploytarget%" "%deploytargetbackupfolder%"
 
 REM Prepare "to be" folder
-SET deploytargetnewfolder=%dir.deploytarget%_new_%mydate%_%mytime%
+SET deploytargetnewfolder=%dir.deploytarget%_new_%TIMESTAMP%
 IF EXIST "%deploytargetnewfolder%" RMDIR /S /Q "%deploytargetnewfolder%"
 MKDIR "%deploytargetnewfolder%"
 
