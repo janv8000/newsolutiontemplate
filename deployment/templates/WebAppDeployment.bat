@@ -30,7 +30,7 @@ MKDIR "%deploytargetnewfolder%"
 
 XCOPY /e "%DIR%..\%dir.foldertodeploy%" "%deploytargetnewfolder%"
 COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%deploytargetnewfolder%"
-COPY "%DIR%..\environment.files\${environment}\Web.config" "%deploytargetnewfolder%\web.config"
+COPY "%DIR%..\environment.files\${environment}\web.config" "%deploytargetnewfolder%\web.config"
 
 REM First Deploy
 IF NOT EXIST "%dir.deploytarget%" (
