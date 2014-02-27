@@ -1,5 +1,14 @@
 ﻿@echo off
 
+SET environment=${environment}
+
+IF /I %environment:~-3% == DMZ (
+	COLOR 47
+	ECHO ERROR: Only allowed outside of DMZ
+	PAUSE
+	EXIT /B 1
+)
+
 SET DIR=%~d0%~p0%
 For /f "tokens=1-3 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
 For /f "tokens=1-2 delims=/: " %%a in ("%TIME%") do (set mytime=%%a%%b)

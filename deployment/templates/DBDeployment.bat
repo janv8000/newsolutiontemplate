@@ -9,7 +9,15 @@ SET server.database="${server.database}"
 SET repository.path="${repository.path}"
 SET version.file="%DIR%_BuildInfo.xml"
 SET version.xpath="//buildInfo/version"
-SET environment="${environment}"
+SET environment=${environment}
+
+IF /I %environment:~-3% == DMZ (
+	COLOR 47
+	ECHO ERROR: Only allowed outside of DMZ
+	PAUSE
+	EXIT /B 1
+)
+
 
 "%DIR%rh\rh.exe" /d=%database.name% /f=%sql.files.directory% /s=%server.database% /vf=%version.file% /vx=%version.xpath% /r=%repository.path% /env=%environment% /simple 
 
