@@ -40,7 +40,7 @@ REM Copy extra files
 COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"
 
 REM Copy env specific files
-COPY "%DIR%..\environment.files\${environment}\${ApplicationName}.exe.config" "%dir.deploytarget%\${ApplicationName}.exe.config.config"
+COPY "%DIR%..\environment.files\${environment}\${ApplicationName}.exe.config" "%dir.deploytarget%\${ApplicationName}.exe.config"
 
 
 "%dir.deploytarget%\${ApplicationName}.exe" install ${applicationserver.service.credentialconfig} --sudo
