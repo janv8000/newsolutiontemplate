@@ -16,42 +16,29 @@ set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${share.webserver.webservicedeployment}
 SET dir.foldertodeploy=_PublishedWebSites\${webservicename}
-
-REM Backup first
 SET deploytargetbackupfolder=%dir.deploytarget%_backup_%TIMESTAMP%
-IF EXIST "%deploytargetbackupfolder%" RMDIR /S /Q "%deploytargetbackupfolder%"
-MKDIR "%deploytargetbackupfolder%"
-IF EXIST "%dir.deploytarget%" XCOPY /E "%dir.deploytarget%" "%deploytargetbackupfolder%"
-
-REM Prepare "to be" folder
-SET deploytargetnewfolder=%dir.deploytarget%_new_%TIMESTAMP%
-IF EXIST "%deploytargetnewfolder%" RMDIR /S /Q "%deploytargetnewfolder%"
-MKDIR "%deploytargetnewfolder%"
-
-XCOPY /e "%DIR%..\%dir.foldertodeploy%" "%deploytargetnewfolder%"
-COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%deploytargetnewfolder%"
-COPY "%DIR%..\environment.files\${environment}\Service.Web.config" "%deploytargetnewfolder%\web.config"
 
 REM First Deploy
 IF NOT EXIST "%dir.deploytarget%" (
 	MKDIR "%dir.deploytarget%"
-	XCOPY /e "%deploytargetnewfolder%" "%dir.deploytarget%"
 )
 
-REM app_offline enabled
-MOVE "%dir.deploytarget%\app_offline.htm.disabled" "%dir.deploytarget%\app_offline.htm"
+REM Backup first, right purged
+robocopy "%dir.deploytarget%" "%deploytargetbackupfolder%" /e /purge
 
-REM alle bestaande dirs verwijderen
-FOR /D %%i in ("%dir.deploytarget%\*.*"); do RMDIR /S /Q "%%i"
+REM Disable application
+COPY "%DIR%..\%dir.foldertodeploy%\app_offline.htm.disabled" "%dir.deploytarget%\app_offline.htm"
 
-REM alle bestanden behalve app_offline.htm verwijderen
-FOR %%I in ("%dir.deploytarget%\*.*") DO (
-  IF /I NOT %%~nxI == app_offline.htm DEL /Q "%%~fI"
-  )
+REM Nieuwe versie setten, app_offline moet blijven, right purged
+robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge /xf app_offline.htm
 
-XCOPY /e "%deploytargetnewfolder%" "%dir.deploytarget%"
+REM Copy extra files
+COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"
 
-REM Enable application
+REM Copy env specific files
+COPY "%DIR%..\environment.files\${environment}\Service.web.config" "%dir.deploytarget%\web.config"
+
+REM Re-enable application
 DEL "%dir.deploytarget%\app_offline.htm"
 
 pause
