@@ -15,44 +15,34 @@ set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${applicationserver.servicedeployment.folder}
-SET servicename=${applicationserver.service.name}
 SET dir.foldertodeploy=_PublishedApplications\${ApplicationName}
-
-REM Backup first
 SET deploytargetbackupfolder=%dir.deploytarget%_backup_%TIMESTAMP%
-IF EXIST "%deploytargetbackupfolder%" RMDIR /S /Q "%deploytargetbackupfolder%"
-MKDIR "%deploytargetbackupfolder%"
-IF EXIST "%dir.deploytarget%" XCOPY /E "%dir.deploytarget%" "%deploytargetbackupfolder%"
 
-REM Prepare "to be" folder
-SET deploytargetnewfolder=%dir.deploytarget%_new_%TIMESTAMP%
-IF EXIST "%deploytargetnewfolder%" RMDIR /S /Q "%deploytargetnewfolder%"
-MKDIR "%deploytargetnewfolder%"
+SET servicename=${applicationserver.service.name}
 
-XCOPY /e "%DIR%..\%dir.foldertodeploy%" "%deploytargetnewfolder%"
-COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%deploytargetnewfolder%"
-COPY "%DIR%..\environment.files\${environment}\${ApplicationName}.exe.config" "%deploytargetnewfolder%\${ApplicationName}.exe.config"
+REM First Deploy
 
 IF EXIST "%dir.deploytarget%" (
 	call "%DIR%\scripts\safeServiceStop" %servicename%
 	"%dir.deploytarget%\${ApplicationName}.exe" uninstall --sudo
 )
-
-REM First Deploy
 IF NOT EXIST "%dir.deploytarget%" (
 	MKDIR "%dir.deploytarget%"
-	XCOPY /e "%deploytargetnewfolder%" "%dir.deploytarget%"
 )
 
-REM alle bestaande dirs verwijderen
-FOR /D %%i in ("%dir.deploytarget%\*.*"); do RMDIR /S /Q "%%i"
+REM Backup first, right purged
+robocopy "%dir.deploytarget%" "%deploytargetbackupfolder%" /e /purge
 
-REM alle bestanden
-FOR %%I in ("%dir.deploytarget%\*.*") DO (
-  DEL /Q "%%~fI"
-  )
+REM Nieuwe versie setten, right purged
+robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge
 
-XCOPY /e "%deploytargetnewfolder%" "%dir.deploytarget%"
+REM Copy extra files
+COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"
+
+REM Copy env specific files
+COPY "%DIR%..\environment.files\${environment}\${ApplicationName}.exe.config" "%dir.deploytarget%\${ApplicationName}.exe.config.config"
+
+
 "%dir.deploytarget%\${ApplicationName}.exe" install ${applicationserver.service.credentialconfig} --sudo
 call "%DIR%\scripts\safeServiceStart" %servicename%
 pause
