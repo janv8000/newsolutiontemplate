@@ -18,7 +18,6 @@ IF /I %environment:~-3% == DMZ (
 	EXIT /B 1
 )
 
-
-"%DIR%rh\rh.exe" /d=%database.name% /f=%sql.files.directory% /s=%server.database% /vf=%version.file% /vx=%version.xpath% /r=%repository.path% /env=%environment% /simple 
+"%DIR%rh\rh.exe" /t /d=%database.name% /f=%sql.files.directory% /s=%server.database% /vf=%version.file% /vx=%version.xpath% /r=%repository.path% /env=%environment% /simple 
 
 pause
