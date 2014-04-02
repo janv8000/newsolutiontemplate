@@ -16,7 +16,7 @@ set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${applicationserver.servicedeployment.folder}
 SET dir.foldertodeploy=_PublishedApplications\${ApplicationName}
-SET deploytargetbackupfolder=%dir.deploytarget%_backup_%TIMESTAMP%
+SET deploytargetbackupfolder=${deploy.backuprootfolder.dir}\${ApplicationName}_backup_%TIMESTAMP%
 
 SET servicename=${applicationserver.service.name}
 
