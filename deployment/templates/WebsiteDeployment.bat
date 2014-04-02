@@ -30,7 +30,7 @@ REM Disable application
 COPY "%DIR%..\%dir.foldertodeploy%\app_offline.htm.disabled" "%dir.deploytarget%\app_offline.htm"
 
 REM Nieuwe versie setten, app_offline moet blijven, right purged
-robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge /xf app_offline.htm
+robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge /r:3 /w:5 /xf app_offline.htm
 
 REM Copy extra files
 COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"

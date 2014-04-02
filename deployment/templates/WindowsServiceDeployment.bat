@@ -34,7 +34,7 @@ REM Backup first, right purged
 robocopy "%dir.deploytarget%" "%deploytargetbackupfolder%" /e /purge
 
 REM Nieuwe versie setten, right purged
-robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge
+robocopy "%DIR%..\%dir.foldertodeploy%" "%dir.deploytarget%" /e /purge /r:3 /w:5
 
 REM Copy extra files
 COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"
