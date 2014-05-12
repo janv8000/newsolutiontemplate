@@ -53,7 +53,6 @@
     <exec program="${dirs.current}\settings\UppercuTSettingsVerifier.exe" verbose="true">
       <arg value="${GUIDDA90765864D84B6C9206BFE68A656D28}\settings" />
     </exec>
-    <fail if="${GUID1AE0E1236F7746D9A6C74E10D85D2C30 == '0'}" message="Not configs all de-templated" />
 	<exec program="findstr" failonerror="false" resultproperty="GUIDB44A3B4B14B7412EADC18D6398B9261A" verbose="true">
       <arg value="/s" />
       <arg value="/p" />
