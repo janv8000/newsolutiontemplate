@@ -37,10 +37,11 @@
 
     <property name="GUID21BDC05D69C84C089C069D8DC76F1EA1" value="${dirs.drop}" />
     <property name="GUID21BDC05D69C84C089C069D8DC76F1EA1" value="${environment::get-variable('CCNetArtifactDirectory')}${path.separator}b${version.build}-r${version.revision}" if="${environment::variable-exists('CCNetArtifactDirectory')}" />
-    <exec program="fc" >
-      <arg value="/A" />
-      <arg value="/N" />
-      <arg value="/T" />
+
+    <exec program="diff" basedir="${dirs.current}\lib\diffutils" verbose="true">
+      <arg value="-u" />
+      <arg value="-I" />
+      <arg value="&quot;.*\?xml version=.*&quot;" />
       <arg value="${dirs.current}\src\Website\Web.config"/>
       <arg value="${GUID21BDC05D69C84C089C069D8DC76F1EA1}\environment.files\LOCAL\Web.config"/>
     </exec>
