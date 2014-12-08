@@ -15,8 +15,8 @@ set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${share.webserver.websitedeployment}
-SET dir.foldertodeploy=_PublishedWebSites\${WebsiteName}
-SET deploytargetbackupfolder=${deploy.backuprootfolder.dir}\${project.name}_${WebsiteName}_backup_%TIMESTAMP%
+SET dir.foldertodeploy=_PublishedWebSites\${websitename}
+SET deploytargetbackupfolder=${deploy.backuprootfolder.dir}\${project.name}_${websitename}_backup_%TIMESTAMP%
 
 REM First Deploy
 IF NOT EXIST "%dir.deploytarget%" (

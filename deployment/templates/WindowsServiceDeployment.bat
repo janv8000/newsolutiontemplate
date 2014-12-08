@@ -15,8 +15,8 @@ set TIMESTAMP=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%%ldt:~8,2%%ldt:~10,2%%ldt:~12,2%
 
 SET file.settings=%DIR%..\settings\${environment}.settings
 SET dir.deploytarget=${applicationserver.servicedeployment.folder}
-SET dir.foldertodeploy=_PublishedApplications\${ApplicationName}
-SET deploytargetbackupfolder=${deploy.backuprootfolder.dir}\${ApplicationName}_backup_%TIMESTAMP%
+SET dir.foldertodeploy=_PublishedApplications\${applicationname}
+SET deploytargetbackupfolder=${deploy.backuprootfolder.dir}\${applicationname}_backup_%TIMESTAMP%
 
 SET servicename=${applicationserver.service.name}
 
@@ -24,7 +24,7 @@ REM First Deploy
 
 IF EXIST "%dir.deploytarget%" (
 	call "%DIR%\scripts\safeServiceStop" %servicename%
-	"%dir.deploytarget%\${ApplicationName}.exe" uninstall --sudo
+	"%dir.deploytarget%\${applicationname}.exe" uninstall --sudo
 )
 IF NOT EXIST "%dir.deploytarget%" (
 	MKDIR "%dir.deploytarget%"
@@ -40,9 +40,9 @@ REM Copy extra files
 COPY "%DIR%..\build_artifacts\_BuildInfo.xml" "%dir.deploytarget%"
 
 REM Copy env specific files
-COPY "%DIR%..\environment.files\${environment}\${ApplicationName}.exe.config" "%dir.deploytarget%\${ApplicationName}.exe.config"
+COPY "%DIR%..\environment.files\${environment}\${applicationname}.exe.config" "%dir.deploytarget%\${applicationname}.exe.config"
 
 
-"%dir.deploytarget%\${ApplicationName}.exe" install ${applicationserver.service.credentialconfig} --sudo
+"%dir.deploytarget%\${applicationname}.exe" install ${applicationserver.service.credentialconfig} --sudo
 call "%DIR%\scripts\safeServiceStart" %servicename%
 pause
